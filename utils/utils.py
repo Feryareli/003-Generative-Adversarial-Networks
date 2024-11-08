@@ -1,4 +1,38 @@
 import mplfinance as mpf
+import yfinance as yf
+import numpy as np
+import pandas as pd
+import tensorflow as tf
+from tensorflow.keras import layers, models
+import tqdm
+
+
+# Descargar los datos de precios históricos
+def download_data(ticker, start_date, end_date):
+    data = yf.download(ticker, start=start_date, end=end_date)
+    data = data[['Close']]
+    return data
+
+# Calcular rendimientos logarítmicos
+def calculate_returns(data):
+    returns = np.log(data / data.shift(1)).dropna()
+    return returns
+
+# Normalizar los rendimientos --- (datos -media)/ desviacion estandar
+def normalize_returns(returns):
+    mean = returns.mean()
+    std_dev = returns.std()
+    returns_norm = (returns - mean) / std_dev
+    return returns_norm
+
+# Descargar y procesar los datos
+ticker = 'AAPL'
+start_date = '2014-11-01'
+end_date = '2024-11-01'
+data = download_data(ticker, start_date, end_date)
+returns = calculate_returns(data)
+returns_norm = normalize_returns(returns)
+x_train_norm = returns_norm.values  # Convertimos a valores numpy para el GAN
 
 def plot_candlestick_with_signals(data, signals):
     # Asegúrate de tener 'Open', 'High', 'Low' y 'Close' en `data`
