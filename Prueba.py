@@ -1,7 +1,5 @@
-import mplfinance as mpf
-import yfinance as yf
-import numpy as np
-import pandas as pd
-import tensorflow as tf
-from tensorflow.keras import layers, models
-import tqdm
+from utils.utils import get_x_train_norm
+
+# Solo probando la función para ver si todo está bien
+x_train_norm = get_x_train_norm()
+print("x_train_norm obtenido con éxito:", x_train_norm[:5])  # Muestra las primeras 5 filas para confirmar

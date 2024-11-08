@@ -14,6 +14,8 @@ from utils.utils import get_x_train_norm
 ticker = 'AAPL'
 start_date = '2014-11-01'
 end_date = '2024-11-01'
+# Obtener x_train_norm
+x_train_norm = get_x_train_norm(ticker='AAPL', start_date='2014-11-01', end_date='2024-11-01')
 latent_dim = 300
 num_scenarios = 100
 seq_len = 252
@@ -22,9 +24,6 @@ seq_len = 252
 data = download_data(ticker, start_date, end_date)
 returns = calculate_returns(data)
 returns_norm = normalize_returns(returns)
-# Obtener x_train_norm
-x_train_norm = get_x_train_norm()
-
 x_train_norm = returns_norm.values  # Convertimos a valores numpy para el GAN
 
 # 2. Generación de escenarios

@@ -34,12 +34,10 @@ def get_x_train_norm(ticker='AAPL', start_date='2014-11-01', end_date='2024-11-0
 
 
 # Desnormalización de los rendimientos generados
-def denormalize_returns(normalized_returns, mean, std_dev):
+def denormalize_returns(normalized_returns, returns):
+    mean = returns.mean()
+    std_dev = returns.std()
     return (normalized_returns * std_dev) + mean
-
-# Calcular la media y desviación estándar de los rendimientos originales
-mean_return = returns.mean().values[0]
-std_dev_return = returns.std().values[0]
 
 
 
