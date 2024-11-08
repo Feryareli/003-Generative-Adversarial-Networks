@@ -327,7 +327,19 @@ optimal_strategy = results_df.sort_values(by='Calmar Ratio', ascending=False).il
 print("Mejores parámetros según el ratio de Calmar:", optimal_strategy)
 
 
+# Calcular el valor final de la estrategia activa (óptima) usando el mejor Stop-Loss y Take-Profit
+signals_optimal = simple_trading_strategy(data)  # Genera señales usando la estrategia activa
+final_value_active = backtest_strategy(data, signals_optimal, optimal_strategy['Stop-Loss'], optimal_strategy['Take-Profit'])
 
+# Calcular el valor final de la estrategia pasiva (compra y retención)
+final_value_passive = passive_strategy(data)  # Valor final de la estrategia pasiva
+
+# Crear el gráfico comparativo
+plt.figure(figsize=(10, 6))
+plt.bar(['Estrategia Activa', 'Estrategia Pasiva'], [final_value_active, final_value_passive], color=['blue', 'grey'])
+plt.title("Comparación de Rendimiento: Estrategia Activa vs. Pasiva")
+plt.ylabel("Valor Final del Portafolio")
+plt.show()
 
 
 
