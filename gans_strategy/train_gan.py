@@ -51,3 +51,5 @@ for epoch in range(epochs):
     print(f"Epoch {epoch}, Gen Loss: {gen_loss.numpy()}, Disc Loss: {disc_loss.numpy()}")
 
     #
+
+
