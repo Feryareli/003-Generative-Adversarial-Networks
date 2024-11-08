@@ -271,3 +271,19 @@ results_df
 # Ordenar
 optimal_strategy = results_df.sort_values(by='Calmar Ratio', ascending=False).iloc[0]
 print("Mejores parámetros según el ratio de Calmar:", optimal_strategy)
+
+
+
+
+
+
+optimal_metrics = pd.DataFrame({
+    'Stop-Loss': [optimal_strategy['stop_loss']],
+    'Take-Profit': [optimal_strategy['take_profit']],
+    'Average Profit': [optimal_strategy['avg_profit']],
+    'Sharpe Ratio': [optimal_strategy['sharpe_ratio']],
+    'Calmar Ratio': [optimal_strategy['calmar_ratio']],
+    'Max Drawdown': [optimal_strategy['max_drawdown']]
+})
+
+optimal_metrics
