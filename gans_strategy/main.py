@@ -138,3 +138,14 @@ for scenario in scenarios_array:
 
 avg_profit = np.mean(profit_scenarios)
 print({'stop_loss': stop_loss, 'take_profit': take_profit, 'avg_profit': avg_profit})
+
+
+
+
+
+
+
+
+# Ordenar
+optimal_strategy = results_df.sort_values(by='Calmar Ratio', ascending=False).iloc[0]
+print("Mejores parámetros según el ratio de Calmar:", optimal_strategy)
