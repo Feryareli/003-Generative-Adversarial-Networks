@@ -50,6 +50,7 @@ for epoch in range(epochs):
     # Cada ciertas iteration, imprime las pérdidas
     print(f"Epoch {epoch}, Gen Loss: {gen_loss.numpy()}, Disc Loss: {disc_loss.numpy()}")
 
+
     #
 
 
