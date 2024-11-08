@@ -44,3 +44,38 @@ for _ in range(num_scenarios):
 
 # Convertir escenarios en un arreglo de NumPy para facilitar el backtesting
 scenarios_array = np.array(scenarios)  # Shape: (100, 252)
+
+
+
+
+
+
+
+
+# Generar fechas y datos ficticios para la serie original
+dates = pd.date_range(start='2024-01-01', periods=seq_len, freq='B')  # Fechas de días hábiles para la simulación
+original_data = data.Close.AAPL.values[:252]  # Datos de ejemplo acumulados como una serie de precios
+initial_price = original_data[0]  # Precio inicial de 2024
+
+# Graficar los escenarios simulados y el escenario original
+plt.figure(figsize=(14, 7))
+
+# Graficar 100 escenarios simulados de `scenarios_array`
+for i in range(min(num_scenarios, 100)):  # Graficamos solo 100 escenarios para mayor claridad
+    # Desnormalizar los rendimientos generados
+    denormalized_returns = denormalize_returns(scenarios_array[i], mean_return, std_dev_return)
+
+    # Acumular rendimientos para simular precios
+    simulated_path = initial_price + np.exp(np.cumsum(denormalized_returns))  # Acumulamos rendimientos desnormalizados
+
+    plt.plot(dates, simulated_path, alpha=0.5, linestyle="--", label=f"Escenario Simulado {i + 1}" if i < 1 else "")
+
+# Graficar el escenario original
+plt.plot(dates, original_data, color="black", linewidth=2, label="Serie Original")
+
+# Configuraciones de la gráfica
+plt.title("Comparación de la Serie de Precios Original vs Escenarios Simulados")
+plt.xlabel("Fecha")
+plt.ylabel("Precio Simulado")
+plt.legend()
+plt.show()
