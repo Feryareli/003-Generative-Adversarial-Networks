@@ -5,9 +5,10 @@ import seaborn as sns
 import tensorflow as tf
 import tqdm
 from utils.utils import download_data, calculate_returns, normalize_returns
-from gans_strategy.train_gan import train_gan, generator
-from gans_strategy.backtest import backtest_strategy, simple_trading_strategy, passive_strategy
-from gans_strategy.strategy import generate_signals
+from gans_strategy.train_gan import build_generator, build_discriminator
+from gans_strategy.backtest import passive_strategy
+from gans_strategy.strategy import rsi_trading_strategy
+from utils.utils import get_x_train_norm
 
 # Configuración de los parámetros del proyecto
 ticker = 'AAPL'
@@ -21,6 +22,9 @@ seq_len = 252
 data = download_data(ticker, start_date, end_date)
 returns = calculate_returns(data)
 returns_norm = normalize_returns(returns)
+# Obtener x_train_norm
+x_train_norm = get_x_train_norm()
+
 x_train_norm = returns_norm.values  # Convertimos a valores numpy para el GAN
 
 # 2. Generación de escenarios

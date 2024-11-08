@@ -1,10 +1,6 @@
-import mplfinance as mpf
 import yfinance as yf
 import numpy as np
 import pandas as pd
-import tensorflow as tf
-from tensorflow.keras import layers, models
-import tqdm
 
 
 # Descargar los datos de precios históricos
@@ -25,14 +21,13 @@ def normalize_returns(returns):
     returns_norm = (returns - mean) / std_dev
     return returns_norm
 
-# Descargar y procesar los datos
-ticker = 'AAPL'
-start_date = '2014-11-01'
-end_date = '2024-11-01'
-data = download_data(ticker, start_date, end_date)
-returns = calculate_returns(data)
-returns_norm = normalize_returns(returns)
-x_train_norm = returns_norm.values  # Convertimos a valores numpy para el GAN
+# Función para obtener x_train_norm
+def get_x_train_norm(ticker='AAPL', start_date='2014-11-01', end_date='2024-11-01'):
+    data = download_data(ticker, start_date, end_date)
+    returns = calculate_returns(data)
+    returns_norm = normalize_returns(returns)
+    x_train_norm = returns_norm.values  # Convertimos a valores numpy para el GAN
+    return x_train_norm
 
 
 
