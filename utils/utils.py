@@ -34,6 +34,24 @@ returns = calculate_returns(data)
 returns_norm = normalize_returns(returns)
 x_train_norm = returns_norm.values  # Convertimos a valores numpy para el GAN
 
+
+
+
+
+# Desnormalización de los rendimientos generados
+def denormalize_returns(normalized_returns, mean, std_dev):
+    return (normalized_returns * std_dev) + mean
+
+# Calcular la media y desviación estándar de los rendimientos originales
+mean_return = returns.mean().values[0]
+std_dev_return = returns.std().values[0]
+
+
+
+
+
+
+
 def plot_candlestick_with_signals(data, signals):
     # Asegúrate de tener 'Open', 'High', 'Low' y 'Close' en `data`
     ohlc_data = data[['Open', 'High', 'Low', 'Close']]
