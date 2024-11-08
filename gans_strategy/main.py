@@ -49,6 +49,24 @@ scenarios_array = np.array(scenarios)  # Shape: (100, 252)
 
 
 
+import matplotlib.pyplot as plt
+
+# Generar datos simulados de scenarios_array para 100 escenarios, cada uno con 252 puntos
+num_scenarios = 100
+seq_len = 252
+
+# Graficar algunos de los escenarios sinteticos
+plt.figure(figsize=(12, 6))
+for i in range(min(num_scenarios, 100)):  # Graficamos solo 100 escenarios para mayor claridad
+    plt.plot(scenarios_array[i], alpha=0.7, label=f"Escenario {i+1}")
+
+plt.title("Rendimientos Sintéticos Generados por el GAN")
+plt.xlabel("Días")
+plt.ylabel("Rendimiento")
+plt.show()
+
+
+
 
 
 
