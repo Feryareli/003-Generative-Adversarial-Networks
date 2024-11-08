@@ -102,6 +102,24 @@ plt.show()
 
 
 
+stop_loss = 0.07
+take_profit = 0.11
+
+profit_scenarios = []
+for scenario in scenarios_array:
+    simulated_prices = pd.DataFrame(np.cumsum(scenario), columns=['Close']) + original_data[-1]
+    signals = simple_trading_strategy(simulated_prices)
+    final_balance = backtest_strategy(simulated_prices, signals, stop_loss, take_profit)
+    profit_scenarios.append(final_balance)
+
+avg_profit = np.mean(profit_scenarios)
+print({'stop_loss': stop_loss, 'take_profit': take_profit, 'avg_profit': avg_profit})
+
+sum(signals.positions == 1)
+
+
+
+
 
 
 # Evaluación de la estrategia con niveles específicos de stop-loss y take-profit
@@ -117,8 +135,6 @@ for scenario in scenarios_array:
 
 avg_profit = np.mean(profit_scenarios)
 print({'stop_loss': stop_loss, 'take_profit': take_profit, 'avg_profit': avg_profit})
-
-
 
 
 
