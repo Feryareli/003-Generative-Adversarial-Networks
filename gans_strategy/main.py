@@ -118,6 +118,19 @@ print({'stop_loss': stop_loss, 'take_profit': take_profit, 'avg_profit': avg_pro
 sum(signals.positions == 1)
 
 
+stop_loss = 0.01
+take_profit = 0.07
+
+profit_scenarios = []
+for scenario in scenarios_array:
+    simulated_prices = pd.DataFrame(np.cumsum(scenario), columns=['Close']) + original_data[-1]
+    signals = simple_trading_strategy(simulated_prices)
+    final_balance = backtest_strategy(simulated_prices, signals, stop_loss, take_profit)
+    profit_scenarios.append(final_balance)
+
+avg_profit = np.mean(profit_scenarios)
+print({'stop_loss': stop_loss, 'take_profit': take_profit, 'avg_profit': avg_profit})
+
 
 
 
@@ -138,9 +151,32 @@ print({'stop_loss': stop_loss, 'take_profit': take_profit, 'avg_profit': avg_pro
 
 
 
+stop_loss = 0.01
+take_profit = 0.07
+
+profit_scenarios = []
+for scenario in scenarios_array:
+    simulated_prices = pd.DataFrame(np.cumsum(scenario), columns=['Close']) + original_data[-1]
+    signals = simple_trading_strategy(simulated_prices)
+    final_balance = backtest_strategy(simulated_prices, signals, stop_loss, take_profit)
+    profit_scenarios.append(final_balance)
+
+avg_profit = np.mean(profit_scenarios)
+print({'stop_loss': stop_loss, 'take_profit': take_profit, 'avg_profit': avg_profit})
 
 
+stop_loss = 0.02
+take_profit = 0.01
 
+profit_scenarios = []
+for scenario in scenarios_array:
+    simulated_prices = pd.DataFrame(np.cumsum(scenario), columns=['Close']) + original_data[-1]
+    signals = simple_trading_strategy(simulated_prices)
+    final_balance = backtest_strategy(simulated_prices, signals, stop_loss, take_profit)
+    profit_scenarios.append(final_balance)
+
+avg_profit = np.mean(profit_scenarios)
+print({'stop_loss': stop_loss, 'take_profit': take_profit, 'avg_profit': avg_profit})
 
 stop_loss = 0.02
 take_profit = 0.02
@@ -154,13 +190,6 @@ for scenario in scenarios_array:
 
 avg_profit = np.mean(profit_scenarios)
 print({'stop_loss': stop_loss, 'take_profit': take_profit, 'avg_profit': avg_profit})
-
-
-
-
-
-
-
 
 
 
@@ -178,8 +207,33 @@ for scenario in scenarios_array:
 avg_profit = np.mean(profit_scenarios)
 print({'stop_loss': stop_loss, 'take_profit': take_profit, 'avg_profit': avg_profit})
 
+stop_loss = 0.03
+take_profit = 0.01
+
+profit_scenarios = []
+for scenario in scenarios_array:
+    simulated_prices = pd.DataFrame(np.cumsum(scenario), columns=['Close']) + original_data[-1]
+    signals = simple_trading_strategy(simulated_prices)
+    final_balance = backtest_strategy(simulated_prices, signals, stop_loss, take_profit)
+    profit_scenarios.append(final_balance)
+
+avg_profit = np.mean(profit_scenarios)
+print({'stop_loss': stop_loss, 'take_profit': take_profit, 'avg_profit': avg_profit})
 
 
+
+stop_loss = 0.03
+take_profit = 0.02
+
+profit_scenarios = []
+for scenario in scenarios_array:
+    simulated_prices = pd.DataFrame(np.cumsum(scenario), columns=['Close']) + original_data[-1]
+    signals = simple_trading_strategy(simulated_prices)
+    final_balance = backtest_strategy(simulated_prices, signals, stop_loss, take_profit)
+    profit_scenarios.append(final_balance)
+
+avg_profit = np.mean(profit_scenarios)
+print({'stop_loss': stop_loss, 'take_profit': take_profit, 'avg_profit': avg_profit})
 
 
 
