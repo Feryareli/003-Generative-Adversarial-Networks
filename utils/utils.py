@@ -55,3 +55,5 @@ def plot_candlestick_with_signals(data, signals):
     # Graficar con las señales de trading
     mpf.plot(ohlc_data, type='candle', style='charles', addplot=add_signals,
              title='Evolución del precio con señales de trading', ylabel='Precio')
+
+    #
