@@ -1,5 +1,37 @@
 import tensorflow as tf
 
+# Generador
+
+#latent_dim es el vector de ruido conjunto de numeros aleatorios que el generador usa para produccir secuencia
+# seq_len es la longuitud dr la secuencia de salida cuantos datos queremos generar en cada secuencia
+
+def build_generator(latent_dim=300, seq_len=252):
+    model = models.Sequential([
+        layers.Input(shape=(latent_dim,)),
+        layers.Dense(256, activation='relu'),
+         layers.Dense(256, activation='relu'),
+        layers.Dense(seq_len, activation='linear')  # Salida con una característica por paso
+    ])
+    return model
+
+# Discriminador (Critic)
+def build_discriminator(seq_len=252):
+    model = models.Sequential([
+        layers.Dense(512, activation='relu', input_shape=(seq_len,1)),
+        layers.Dense(256, activation='relu'),
+        layers.Dense(128, activation='relu'),
+        layers.Dense(1, activation='linear')  # Salida lineal para WGAN
+    ])
+    return model
+
+# Instanciar modelos
+latent_dim = 300
+seq_len = 252
+generator = build_generator(latent_dim=latent_dim, seq_len=seq_len)
+discriminator = build_discriminator(seq_len=252)
+
+generator.summary()
+
 gen_loss_history = []
 disc_loss_history = []
 
