@@ -228,6 +228,45 @@ print({'stop_loss': stop_loss, 'take_profit': take_profit, 'avg_profit': avg_pro
 
 
 
+# Lista de resultados
+results = []
+
+for sl in stop_loss_levels:
+    for tp in take_profit_levels:
+        profit_scenarios = []
+
+        for scenario in scenarios_array:
+            simulated_prices = pd.DataFrame(np.cumsum(scenario), columns=['Close']) + original_data[-1]
+            signals = simple_trading_strategy(simulated_prices)
+            final_balance = backtest_strategy(simulated_prices, signals, sl, tp)
+            profit_scenarios.append(final_balance)
+
+        # Calcular métricas
+        avg_profit = np.mean(profit_scenarios)
+        sharpe_ratio, calmar_ratio, max_drawdown = calculate_metrics(profit_scenarios)
+
+        # Añadir resultados a la lista
+        results.append({
+            'Stop-Loss': sl,
+            'Take-Profit': tp,
+            'Average Profit': avg_profit,
+            'Sharpe Ratio': sharpe_ratio,
+            'Calmar Ratio': calmar_ratio,
+            'Max Drawdown': max_drawdown
+        })
+
+# Crear el DataFrame con todas las columnas
+results_df = pd.DataFrame(results)
+
+# Visualizar la tabla en el notebook
+results_df
+
+
+
+
+
+
+
 
 # Ordenar
 optimal_strategy = results_df.sort_values(by='Calmar Ratio', ascending=False).iloc[0]
