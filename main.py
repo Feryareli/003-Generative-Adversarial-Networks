@@ -14,11 +14,25 @@ from utils.utils import get_x_train_norm
 ticker = 'AAPL'
 start_date = '2014-11-01'
 end_date = '2024-11-01'
+
 # Obtener x_train_norm
 x_train_norm = get_x_train_norm(ticker='AAPL', start_date='2014-11-01', end_date='2024-11-01')
+
 latent_dim = 300
 num_scenarios = 100
 seq_len = 252
+
+# Crear (instanciar) el modelo generador
+generator = build_generator(latent_dim=latent_dim, seq_len=seq_len)
+
+# Crear (instanciar) el modelo discriminador
+discriminator = build_discriminator(seq_len=seq_len)
+
+# Ver el resumen del generador (opcional)
+generator.summary()
+
+# Entrenar el GAN
+gen_loss_history, disc_loss_history = train_gan(generator, discriminator, x_train_norm)
 
 # 1. Descarga y preprocesamiento de datos
 data = download_data(ticker, start_date, end_date)
@@ -47,7 +61,7 @@ for _ in range(num_scenarios):
 
 # Convertir escenarios en un arreglo de NumPy para facilitar el backtesting
 scenarios_array = np.array(scenarios)  # Shape: (100, 252)
-
+scenarios_array
 
 
 

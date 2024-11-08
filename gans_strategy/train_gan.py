@@ -1,10 +1,7 @@
 import tensorflow as tf
 from tensorflow.keras import layers, models
 
-# Generador
-
-#latent_dim es el vector de ruido conjunto de numeros aleatorios que el generador usa para produccir secuencia
-# seq_len es la longuitud dr la secuencia de salida cuantos datos queremos generar en cada secuencia
+# Construir Generador
 
 def build_generator(latent_dim=300, seq_len=252):
     model = models.Sequential([
@@ -25,20 +22,17 @@ def build_discriminator(seq_len=252):
     ])
     return model
 
-# Instanciar modelos
-latent_dim = 300
-seq_len = 252
-generator = build_generator(latent_dim=latent_dim, seq_len=seq_len)
-discriminator = build_discriminator(seq_len=252)
+# Función para entrenar el GAN
+def train_gan(generator, discriminator, x_train_norm, epochs=1000, batch_size=100, clip_value=1):
+    gen_loss_history = []
+    disc_loss_history = []
 
-generator.summary()
+    # Optimizadores para el generador y el discriminador
+    generator_optimizer = tf.keras.optimizers.Adam(learning_rate=0.0001)
+    discriminator_optimizer = tf.keras.optimizers.Adam(learning_rate=0.0001)
 
-gen_loss_history = []
-disc_loss_history = []
-
-# Optimizer------ ADAM
-generator_optimizer = tf.keras.optimizers.Adam(learning_rate=0.0001)
-discriminator_optimizer = tf.keras.optimizers.Adam(learning_rate=0.0001)
+    # Resumen del modelo generador
+    generator.summary()
 
 @tf.function
 def train_step(real_data, generator, discriminator, batch_size=100, clip_value=1):
@@ -71,7 +65,6 @@ def train_step(real_data, generator, discriminator, batch_size=100, clip_value=1
     return gen_loss, disc_loss
 
 # Entrenar por varias épocas
-epochs = 1000
 num_batches = (len(x_train_norm) // 252) -1
 for epoch in range(epochs):
     for batch in range(num_batches):
