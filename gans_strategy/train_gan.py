@@ -47,5 +47,7 @@ for epoch in range(epochs):
         gen_loss_history.append(gen_loss)
         disc_loss_history.append(disc_loss)
 
-    # Cada ciertas iteraciones, imprime las pérdidas
+    # Cada ciertas iteration, imprime las pérdidas
     print(f"Epoch {epoch}, Gen Loss: {gen_loss.numpy()}, Disc Loss: {disc_loss.numpy()}")
+
+    #
