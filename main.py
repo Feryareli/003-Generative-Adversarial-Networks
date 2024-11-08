@@ -34,6 +34,7 @@ generator.summary()
 # Entrenar el GAN
 gen_loss_history, disc_loss_history = train_gan(generator, discriminator, x_train_norm)
 
+
 # 1. Descarga y preprocesamiento de datos
 data = download_data(ticker, start_date, end_date)
 returns = calculate_returns(data)

@@ -31,11 +31,12 @@ def train_gan(generator, discriminator, x_train_norm, epochs=1000, batch_size=10
     generator_optimizer = tf.keras.optimizers.Adam(learning_rate=0.0001)
     discriminator_optimizer = tf.keras.optimizers.Adam(learning_rate=0.0001)
 
-    # Resumen del modelo generador
-    generator.summary()
+    # Número de lotes
+    num_batches = (len(x_train_norm) // batch_size) - 1
+
 
 @tf.function
-def train_step(real_data, generator, discriminator, batch_size=100, clip_value=1):
+def train_step(real_data):
     noise = tf.random.normal([batch_size, generator.input_shape[-1]])
 
     with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
