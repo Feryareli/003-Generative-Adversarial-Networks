@@ -66,14 +66,14 @@ def train_step(real_data):
 
     return gen_loss, disc_loss
 
-# Entrenar por varias épocas
-num_batches = (len(x_train_norm) // 252) -1
-for epoch in range(epochs):
-    for batch in range(num_batches):
-        batch = x_train_norm[batch*252:(batch+1)*252]
-        gen_loss, disc_loss = train_step(batch, generator, discriminator)
-        gen_loss_history.append(gen_loss)
-        disc_loss_history.append(disc_loss)
+    # Entrenar por varias épocas
+    num_batches = (len(x_train_norm) // 252) -1
+    for epoch in range(epochs):
+        for batch in range(num_batches):
+            batch = x_train_norm[batch*252:(batch+1)*252]
+            gen_loss, disc_loss = train_step(batch, generator, discriminator)
+            gen_loss_history.append(gen_loss)
+            disc_loss_history.append(disc_loss)
 
     # Cada ciertas iteration, imprime las pérdidas
     print(f"Epoch {epoch}, Gen Loss: {gen_loss.numpy()}, Disc Loss: {disc_loss.numpy()}")

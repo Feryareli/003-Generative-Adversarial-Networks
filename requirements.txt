@@ -7,3 +7,8 @@ yfinance==0.2.31
 mplfinance==0.12.10b0
 tqdm==4.67.0
 
+google-pasta==0.2.0
+multitasking==0.0.11
+ta==0.11.0
+tensorboard-data-server==0.7.2
+tzdata==2024.2
