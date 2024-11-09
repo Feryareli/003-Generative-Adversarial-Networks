@@ -1,4 +1,5 @@
 import tensorflow as tf
+from tensorflow import keras
 from tensorflow.keras import layers, models
 
 # Construir Generador
@@ -77,8 +78,6 @@ for epoch in range(epochs):
     # Cada ciertas iteration, imprime las pérdidas
     print(f"Epoch {epoch}, Gen Loss: {gen_loss.numpy()}, Disc Loss: {disc_loss.numpy()}")
 
-
-    #
 
 
 
