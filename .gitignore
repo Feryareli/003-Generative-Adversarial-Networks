@@ -1,0 +1,8 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+
+# Ignorar archivos y carpetas específicos de Python y Jupyter
+.ipynb_checkpoints/
+__pycache__/
+venv/
