@@ -6,8 +6,9 @@ import tensorflow as tf
 import tqdm
 from utils.utils import download_data, calculate_returns, normalize_returns, denormalize_returns
 from gans_strategy.train_gan import build_generator, build_discriminator, train_step
-from gans_strategy.backtest import passive_strategy
+from gans_strategy.backtesting import passive_strategy, create_signals, calculate_max_drawdown, calculate_win_loss_ratio, calculate_sharpe_ratio, run_backtest
 from gans_strategy.strategy import rsi_trading_strategy
+
 
 # Configuración de los parámetros del proyecto
 ticker = 'AAPL'
@@ -113,66 +114,149 @@ plt.ylabel("Precio Simulado")
 plt.legend()
 plt.show()
 
-# Lista de resultados
-results = []
-stop_loss_levels = [0.07, 0.01, 0.07, 0.01, 0.02, 0.02, 0.02, 0.03, 0.03, 0.03, 0.04]
-take_profit_levels = [0.11, 0.07, 0.7, 0.07, 0.01, 0.02, 0.03, 0.01, 0.02, 0.03, 0.04]
+# DATA FRAME DE LAS SIMULACIONES
+# Supongamos que tienes la serie original y el precio inicial
+original_data = data.Close.AAPL.values[:252]  # Serie original de precios
+initial_price = original_data[0]  # Precio inicial de 2024
 
-for sl in stop_loss_levels:
-    for tp in take_profit_levels:
-        profit_scenarios = []
+# Crear una lista para almacenar cada serie simulada
+num_scenarios = 100  # Número de escenarios que quieres simular
+simulated_paths = []
 
-        for scenario in scenarios_array:
-            simulated_prices = pd.DataFrame(np.cumsum(scenario), columns=['Close']) + original_data[-1]
-            signals = rsi_trading_strategy(simulated_prices)
-            final_balance = backtest_strategy(simulated_prices, signals, sl, tp)
-            profit_scenarios.append(final_balance)
+for i in range(num_scenarios):
+    # Desnormalizar los retornos generados para cada escenario
+    denormalized_returns = denormalize_returns(scenarios_array[i], mean_return, std_dev_return)
+    # Acumular rendimientos para simular precios y partir desde el precio inicial
+    simulated_path = initial_price * np.exp(np.cumsum(denormalized_returns))
+    simulated_paths.append(simulated_path)
 
-        # Calcular métricas
-        avg_profit = np.mean(profit_scenarios)
-        sharpe_ratio, calmar_ratio, max_drawdown = calculate_metrics(profit_scenarios)
+# Crear un diccionario para las columnas del DataFrame
+data_dict = {
+    'Fecha': pd.date_range(start='2024-01-01', periods=len(original_data), freq='B'),  # Fechas de días hábiles
+    'Serie Original': original_data
+}
 
-        # Añadir resultados a la lista
-        results.append({
-            'Stop-Loss': sl,
-            'Take-Profit': tp,
-            'Average Profit': avg_profit,
-            'Sharpe Ratio': sharpe_ratio,
-            'Calmar Ratio': calmar_ratio,
-            'Max Drawdown': max_drawdown
-        })
+# Añadir cada serie simulada al diccionario
+for i in range(num_scenarios):
+    data_dict[f'Serie Simulada {i+1}'] = simulated_paths[i]
 
-# Crear el DataFrame con todas las columnas
-results_df = pd.DataFrame(results)
+# Crear el DataFrame con todas las series
+df = pd.DataFrame(data_dict)
 
-# Visualizar la tabla en el notebook
-print(results_df)
+# Establecer la columna de fechas como índice (opcional)
+df.set_index('Fecha', inplace=True)
 
-# Ordenar
-optimal_strategy = results_df.sort_values(by='Calmar Ratio', ascending=False).iloc[0]
-print("Mejores parámetros según el ratio de Calmar:", optimal_strategy)
+# Cargar el dataset
+df = df
 
-# Calcular el valor final de la estrategia activa (óptima) usando el mejor Stop-Loss y Take-Profit
-signals_optimal = rsi_trading_strategy(data)  # Genera señales usando la estrategia activa
-final_value_active = backtest_strategy(data, signals_optimal, optimal_strategy['Stop-Loss'], optimal_strategy['Take-Profit'])
+#Parámetros iniciales
+INITIAL_CAPITAL = 1_000_000
+COMMISSION = 0.00125
 
-# Calcular el valor final de la estrategia pasiva (compra y retención)
-final_value_passive = passive_strategy(data)  # Valor final de la estrategia pasiva
 
-# Crear el gráfico comparativo
-plt.figure(figsize=(10, 6))
-plt.bar(['Estrategia Activa', 'Estrategia Pasiva'], [final_value_active, final_value_passive], color=['blue', 'grey'])
-plt.title("Comparación de Rendimiento: Estrategia Activa vs. Pasiva")
-plt.ylabel("Valor Final del Portafolio")
-plt.show()
 
-optimal_metrics = pd.DataFrame({
-    'Stop-Loss': [optimal_strategy['stop_loss']],
-    'Take-Profit': [optimal_strategy['take_profit']],
-    'Average Profit': [optimal_strategy['avg_profit']],
-    'Sharpe Ratio': [optimal_strategy['sharpe_ratio']],
-    'Calmar Ratio': [optimal_strategy['calmar_ratio']],
-    'Max Drawdown': [optimal_strategy['max_drawdown']]
-})
+# Parámetros óptimos de ejemplo
+best_params =[ {
+    "n_shares": 81,
+    "stop_loss": 0.08,
+    "take_profit": 0.20,
+    "rsi_window": 10,
+    "rsi_lower_threshold": 90,
+    "rsi_upper_threshold": 99
+},
+{
+    "n_shares": 81,
+    "stop_loss": 0.05,
+    "take_profit": 0.15,
+    "rsi_window": 10,
+    "rsi_lower_threshold": 90,
+    "rsi_upper_threshold": 99
+},
+{
+    "n_shares": 81,
+    "stop_loss": 0.06,
+    "take_profit": 0.18,
+    "rsi_window": 10,
+    "rsi_lower_threshold": 90,
+    "rsi_upper_threshold": 99
+},
+{
+    "n_shares": 81,
+    "stop_loss": 0.10,
+    "take_profit": 0.25,
+    "rsi_window": 10,
+    "rsi_lower_threshold": 90,
+    "rsi_upper_threshold": 99
+},
+{
+    "n_shares": 81,
+    "stop_loss": 0.08,
+    "take_profit": 0.28,
+    "rsi_window": 10,
+    "rsi_lower_threshold": 90,
+    "rsi_upper_threshold": 99
+},
+{
+    "n_shares": 81,
+    "stop_loss": 0.15,
+    "take_profit": 0.25,
+    "rsi_window": 10,
+    "rsi_lower_threshold": 90,
+    "rsi_upper_threshold": 99
+},
+{
+    "n_shares": 81,
+    "stop_loss": 0.09,
+    "take_profit": 0.27,
+    "rsi_window": 10,
+    "rsi_lower_threshold": 90,
+    "rsi_upper_threshold": 99
+},
+{
+    "n_shares": 81,
+    "stop_loss": 0.5,
+    "take_profit": 0.17,
+    "rsi_window": 10,
+    "rsi_lower_threshold": 90,
+    "rsi_upper_threshold": 99
+},
+{
+    "n_shares": 81,
+    "stop_loss": 0.095,
+    "take_profit": 0.2156,
+    "rsi_window": 10,
+    "rsi_lower_threshold": 90,
+    "rsi_upper_threshold": 99
+},
+{
+    "n_shares": 81,
+    "stop_loss": 0.143,
+    "take_profit": 0.2546,
+    "rsi_window": 10,
+    "rsi_lower_threshold": 90,
+    "rsi_upper_threshold": 99
+}
 
-print(optimal_metrics)
+]
+
+for i in best_params:
+    # Ejecutar el backtest en "Serie Original" y todas las series simuladas
+    for column_name in df.columns:
+        if column_name == "Serie Original" or column_name.startswith("Serie Simulada"):
+            print(f"Running backtest on {column_name}...")
+            final_capital, max_drawdown, win_loss_ratio, sharpe_ratio, portfolio_values = run_backtest(df, i,
+                                                                                                       column_name)
+
+            initial_capital = INITIAL_CAPITAL
+            pnl = final_capital - initial_capital
+            annual_return = (final_capital / initial_capital) ** (252 / len(portfolio_values)) - 1
+            calmar_ratio = annual_return / max_drawdown if max_drawdown > 0 else float('inf')
+
+            print(f"Results for {column_name}:")
+            print(f"Final Portfolio Value: ${final_capital:,.2f}")
+            print(f"P&L: ${pnl:,.2f}")
+            print(f"Max Drawdown (%): {max_drawdown * 100:.2f}")
+            print(f"Win-Loss Ratio: {win_loss_ratio:.2f}")
+            print(f"Sharpe Ratio: {sharpe_ratio:.2f}")
+            print(f"Calmar Ratio: {calmar_ratio:.2f}\n")
+
