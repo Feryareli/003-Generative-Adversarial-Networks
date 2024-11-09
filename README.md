@@ -35,16 +35,6 @@ realistic market scenarios. The generated scenarios provide different
 conditions for backtesting, allowing a robust analysis of the trading 
 strategy’s behavior in simulated environments.
 
-### Datasets:
- 
-- **AAPL 5-minute Test Set (aapl_5m_test.csv)**
-- **AAPL 5-minute Train Set (aapl_5m_train.csv)**
- 
-- **Bitcoin Project Test Set (btc_project_test.csv)**
-- **Bitcoin Project Train Set (btc_project_train.csv)**
- 
-Each dataset contains key market data, including timestamp, price information (Open, High, Low, Close), and Volume. The training sets are significantly larger, allowing for better optimization of parameters, while the test sets are used to evaluate the performance of the strategies.
-
 ---
 
 ## Project Structure
@@ -81,11 +71,12 @@ The backtesting process compares the active trading strategy with a passive benc
 The backtest was performed on 100 generated scenarios, testing the active trading strategy at various stop-loss and take-profit levels. Results are presented in comparison to the passive buy-and-hold strategy.
 
 ### Key Parameters:
-- **Number of Shares**: Predefined based on the trading strategy.
-- **Stop-Loss Levels**: 10 predefined levels for analysis.
-- **Take-Profit Levels**: 10 predefined levels for analysis.
-- **RSI Window**: Used for buy and sell signal generation.
-- **RSI Thresholds**: Values indicating overbought and oversold conditions to trigger signals.
+- **Number of Shares**: 81 shares, optimized based on the trading strategy.
+- **Stop-Loss Levels**: 0.143 predefined for comprehensive analysis.
+- **Take-Profit Levels**: 0.2546 predefined for comparative testing.
+- **RSI Window**: 10 periods, used to generate buy and sell signals.
+- **RSI Lower Threshold**: 90, indicating an oversold level for potential buy signals.
+- **RSI Lower Threshold**: 99 indicating an overbought level for potential sell signals.
 
 ---
 
@@ -117,10 +108,14 @@ pip install -r requirements.txt
 
 python gans_strategy/main.py
 
-### 9. Run the Jupyter Notebook for Visualization
+### 6. Run the Backtesting
+
+python gans_strategy/backtesting.py
+
+### 7. Run the Jupyter Notebook for Visualization
 
 jupyter notebook report.ipynb
 
-### 10. Deactivate the Virtual Environment
+### 8. Deactivate the Virtual Environment
 
 deactivate
